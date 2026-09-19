@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+/* Design tokens. Palette: ink navy on cool paper; marker yellow is used sparingly
+   (logo mark, the "open role" tag). Signal blue is for links and focus. */
+@theme {
+  --color-ink: #101b33;
+  --color-paper: #f4f6fa;
+  --color-card: #ffffff;
+  --color-marker: #f5c518;
+  --color-slate: #566078;
+  --color-line: #d5dbe7;
+  --color-signal: #2b4bff;
+  --color-danger: #b42318;
+  --color-danger-soft: #fdecea;
+
+  --font-display: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Instrument Sans Variable", ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-signal);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
