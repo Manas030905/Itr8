@@ -5,7 +5,8 @@ import type { NextConfig } from "next";
 const API_INTERNAL_URL = process.env.API_INTERNAL_URL ?? "http://localhost:8000";
 
 const nextConfig: NextConfig = {
-  output: "standalone",
+  // Docker builds set NEXT_OUTPUT=standalone for a small runtime image; `npm start` works normally.
+  output: process.env.NEXT_OUTPUT === "standalone" ? "standalone" : undefined,
   poweredByHeader: false,
   // Same-origin API: the browser only ever talks to this origin (see docs/ARCHITECTURE.md).
   async rewrites() {

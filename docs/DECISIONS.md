@@ -29,7 +29,7 @@ Format: **Status** · **Context** · **Decision** · **Consequences**.
 **Consequences:** No CORS, first-party cookies, OAuth redirect URI lives on the web origin. Requires the web host to support rewrites (Vercel does; Cloudflare Pages needs care — see DEPLOYMENT.md).
 
 ## ADR-005 — Allowlist is data (`colleges.email_domains`)
-**Status:** Accepted
+**Status:** ~~Accepted~~ **Superseded by ADR-015**
 **Decision:** Allowed domains are rows in `colleges`, seeded with IIIT Raichur (`iiitr.ac.in`). Exact-domain match, lowercase.
 **Consequences:** Adding a college needs no code change. Subdomains (e.g. `students.iiitr.ac.in`) are **not** matched automatically — add them to the array if they exist.
 **Verification:** `iiitr.ac.in` confirmed as the institute's official mail domain from iiitr.ac.in (`info@iiitr.ac.in`, `queries@iiitr.ac.in`). Not publicly verifiable: whether *student* mailboxes use exactly this domain and are Google-backed.
@@ -38,6 +38,7 @@ Format: **Status** · **Context** · **Decision** · **Consequences**.
 **Status:** Accepted (needs real-account confirmation)
 **Context:** Google's `hd` claim proves a Google Workspace-managed account, but only works if IIIT Raichur mail runs on Google Workspace, which is unknown.
 **Decision:** Require `email_verified` and exact domain match. `GOOGLE_REQUIRE_HD` (default false) additionally requires `hd`. `ALLOWED_TEST_EMAILS` allows named exceptions.
+**Update (founder):** student accounts are shown as `@iiitr.ac.in`; student-council accounts use `@students.iiitr.ac.in`, which the pilot does **not** allow. Enabling it is a config change (ADR-015).
 **Consequences:** If student mail is not Google-backed, students would need a Google account registered with their college address (works, but clunky) — then consider Microsoft/email-OTP login. Faculty/staff on the same domain are also admitted. **Founder action:** test with a real student account before pilot; if `hd` is present, set `GOOGLE_REQUIRE_HD=true`.
 
 ## ADR-007 — Sync SQLAlchemy 2.0 + psycopg 3
@@ -82,3 +83,20 @@ Format: **Status** · **Context** · **Decision** · **Consequences**.
 **Status:** Accepted
 **Decision:** `pyproject.toml` + `uv.lock`; `uv sync` / `uv run`.
 **Consequences:** Fast, reproducible installs. `pip install .` also works.
+
+## ADR-015 — Allowed email domains come from `ALLOWED_EMAIL_DOMAINS` (supersedes ADR-005)
+**Status:** Accepted (founder decision)
+**Context:** The founder does not want the domain hard-coded in application logic and wants more domains addable later.
+**Decision:** `ALLOWED_EMAIL_DOMAINS` (comma-separated, lowercase, exact match, no wildcards). No built-in default: empty means nobody can sign in, and non-local environments refuse to start with it empty. Invalid entries (`*`, `*.x.com`, bare hostnames) fail at startup. The `colleges` table keeps identity only (name, slug); `email_domains` was removed and migration `0001` was edited in place, which was safe because nothing had been deployed.
+**Consequences:** One source of truth, changeable without a migration or code change. Every allowed domain maps to `DEFAULT_COLLEGE_SLUG`; when a second college is added we need a domain→college mapping (a small migration plus config format), noted for a later milestone.
+
+## ADR-016 — Pin both `iss` and `aud` when validating the Google ID token
+**Status:** Accepted
+**Context:** Testing with locally forged tokens showed Authlib's defaults reject bad signatures, expiry and nonce, but do **not** check the issuer, and a token with a foreign `aud` and `azp` set to our client id was accepted. Not exploitable today (it needs a validly signed Google token), but "our client id must be in `aud`" is baseline OIDC.
+**Decision:** Pass `claims_options` requiring `iss` in Google's two issuer forms and `aud` containing our client id. Tests assert the exact error class for each forgery (wrong issuer, audience, nonce, expiry, missing claims, unknown signing key) so they cannot pass for the wrong reason.
+**Consequences:** Multi-audience tokens that include us are still accepted.
+
+## ADR-017 — Docker/Compose conventions
+**Status:** Accepted (unproven under real Docker; see TODO)
+**Decision:** API image has `dev` (adds pytest/ruff/mypy; used by Compose) and `prod` (default, no dev tools) targets. A fresh clone runs with **no `.env`**: Compose supplies local-safe defaults (`ALLOWED_EMAIL_DOMAINS=iiitr.ac.in`, `DEV_LOGIN_ENABLED=true`, Google unset, so sign-in fails safe with a clear message). Next.js `standalone` output is opt-in via `NEXT_OUTPUT=standalone` (set only in the Docker build) so `npm start` keeps working. `API_INTERNAL_URL` is a build-time arg because Next bakes rewrite destinations in at build. The test database is created by `scripts/init-db.sql` on first volume init.
+**Consequences:** `DEV_LOGIN_ENABLED` defaulting to true is acceptable only because Compose forces `ENVIRONMENT=local`, and the API independently ignores it elsewhere. A bug found while replaying the image: `config.py` indexed `Path.parents[4]`, which does not exist at `/app/app/core/config.py` and would have crashed the container at import; it now falls back safely.

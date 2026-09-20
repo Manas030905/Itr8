@@ -13,8 +13,8 @@ Priorities: **P0** = core loop, must ship · **P1** = needed for a good pilot ·
 ## Access rules (pilot)
 
 - Sign-in with **Google only**. No passwords.
-- Only accounts whose verified email domain belongs to an entry in the `colleges` table may sign in.
-  Seeded college: **IIIT Raichur — `iiitr.ac.in`**.
+- Only accounts whose verified email domain is listed in `ALLOWED_EMAIL_DOMAINS` may sign in
+  (pilot value: **`iiitr.ac.in`**). Exact match; `students.iiitr.ac.in` (student council) is not allowed.
 - Optional exact-email allowlist (`ALLOWED_TEST_EMAILS`) for testers outside the domain.
 - Faculty/staff also use `iiitr.ac.in`; the pilot allows them (see ADR-006). Revisit if it matters.
 
@@ -22,11 +22,11 @@ Priorities: **P0** = core loop, must ship · **P1** = needed for a good pilot ·
 
 | ID | Requirement | Priority | Milestone | Status |
 |----|-------------|----------|-----------|--------|
-| AUTH-1 | Sign in with Google; only allowed college domains admitted | P0 | 1 | ⬜ |
-| AUTH-2 | Secure server-side sessions; logout revokes the session server-side | P0 | 1 | ⬜ |
-| AUTH-3 | Protected API routes return 401 without a valid session | P0 | 1 | ⬜ |
-| PROF-1 | Onboarding: name, branch, year, short bio | P0 | 1 | ⬜ |
-| PROF-2 | View and edit my profile | P0 | 1 | ⬜ |
+| AUTH-1 | Sign in with Google; only allowed college domains admitted | P0 | 1 | ✅ |
+| AUTH-2 | Secure server-side sessions; logout revokes the session server-side | P0 | 1 | ✅ |
+| AUTH-3 | Protected API routes return 401 without a valid session | P0 | 1 | ✅ |
+| PROF-1 | Onboarding: name, branch, year, short bio | P0 | 1 | ✅ |
+| PROF-2 | View and edit my profile | P0 | 1 | ✅ |
 | AUTH-4 | GitHub connect (verified GitHub identity) | P1 | 2 | ⬜ |
 | PROF-3 | Skills (curated taxonomy + level), interests, availability, looking-for, GitHub/LinkedIn links | P0 | 2 | ⬜ |
 | PROF-4 | Public profile page `/u/[username]` | P0 | 2 | ⬜ |
@@ -56,6 +56,20 @@ completes a minimal profile, and sees it saved.
 4. Protected API routes return 401 without a session.
 5. CI is green; a fresh clone runs locally (`docker compose up`, or the manual steps in README).
 6. At least one API test covers auth, and one covers profile-update authorization.
+
+**Verification status (local; see `TODO.md` for what is unproven)**
+
+| # | Criterion | Status |
+|---|-----------|--------|
+| 1a | Allowed user signs in, onboards, sees profile after refresh | ✅ real-browser test + smoke test (Google mocked / dev-login) |
+| 1b | …on the **deployed staging URL** | ⬜ not done: needs founder's hosting + Google accounts |
+| 1c | …with a **real Google round-trip** | ⬜ not done: sandbox cannot reach Google |
+| 2 | Disallowed domain rejected with a clear message | ✅ tests + browser |
+| 3 | Logout invalidates the session server-side | ✅ tests + smoke (old cookie replay → 401) |
+| 4 | Protected API routes return 401 without a session | ✅ tests + smoke |
+| 5a | CI green | ⬜ CI has never run (repo not pushed); all its commands pass locally |
+| 5b | Fresh clone runs via `docker compose up` | ⬜ unproven under real Docker (images cannot be pulled in the sandbox) |
+| 6 | Auth test + profile-authorization test | ✅ 130 backend tests, 11/11 security mutants caught |
 
 **Out of scope for Milestone 1:** GitHub OAuth, skills taxonomy, usernames/public profiles,
 projects, discovery, notifications, rate limiting, any AI.

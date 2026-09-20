@@ -14,8 +14,11 @@ from typing import Literal
 from pydantic import field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-_REPO_ROOT = Path(__file__).resolve().parents[4]
-_API_ROOT = Path(__file__).resolve().parents[2]
+_PARENTS = Path(__file__).resolve().parents
+_API_ROOT = _PARENTS[2]
+# In a monorepo checkout this is the repo root (where .env lives). In a container image the
+# code sits at /app/app/core/config.py and there is no such parent, so fall back safely.
+_REPO_ROOT = _PARENTS[4] if len(_PARENTS) > 4 else _API_ROOT
 
 DEFAULT_SECRET_KEY = "change-me-local-only-change-me-local-only"
 _DOMAIN_RE = re.compile(r"^(?=.{1,253}$)([a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$")

@@ -1,0 +1,70 @@
+# Local development stack:  docker compose up --build
+#   web  -> http://localhost:3000     api docs -> http://localhost:8000/api/docs
+# A fresh clone needs NO .env: everything below has a local-safe default. To use real Google
+# sign-in, copy .env.example to .env and fill in GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET.
+name: builder-hub
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: builderhub
+      POSTGRES_PASSWORD: builderhub_dev
+      POSTGRES_DB: builderhub
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/10-init.sql:ro
+    ports:
+      - "127.0.0.1:5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U builderhub -d builderhub"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  api:
+    build:
+      context: ./apps/api
+      target: dev
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ENVIRONMENT: local
+      DATABASE_URL: postgresql+psycopg://builderhub:builderhub_dev@db:5432/builderhub
+      TEST_DATABASE_URL: postgresql+psycopg://builderhub:builderhub_dev@db:5432/builderhub_test
+      FRONTEND_URL: http://localhost:3000
+      SECRET_KEY: ${SECRET_KEY:-change-me-local-only-change-me-local-only}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      GOOGLE_REQUIRE_HD: ${GOOGLE_REQUIRE_HD:-false}
+      ALLOWED_EMAIL_DOMAINS: ${ALLOWED_EMAIL_DOMAINS:-iiitr.ac.in}
+      DEFAULT_COLLEGE_SLUG: ${DEFAULT_COLLEGE_SLUG:-iiit-raichur}
+      ALLOWED_TEST_EMAILS: ${ALLOWED_TEST_EMAILS:-}
+      DEV_LOGIN_ENABLED: ${DEV_LOGIN_ENABLED:-true}
+      SENTRY_DSN: ${SENTRY_DSN:-}
+    ports:
+      - "127.0.0.1:8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request as u; u.urlopen('http://localhost:8000/api/v1/health/ready', timeout=3)"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 15s
+
+  web:
+    build:
+      context: ./apps/web
+      args:
+        API_INTERNAL_URL: http://api:8000
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      API_INTERNAL_URL: http://api:8000
+      DEV_LOGIN_ENABLED: ${DEV_LOGIN_ENABLED:-true}
+    ports:
+      - "3000:3000"
+
+volumes:
+  pgdata:

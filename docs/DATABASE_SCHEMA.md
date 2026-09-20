@@ -15,14 +15,14 @@ The migrations are the source of truth; this file is a readable summary.
 ## Milestone 1 — implemented
 
 ### `colleges`
-The allowlist of institutions. Adding a college = inserting a row (no code change).
+Institution identity. **Which email domains may sign in is configuration** (`ALLOWED_EMAIL_DOMAINS`),
+not data (ADR-015). Every allowed domain currently maps to the college named by `DEFAULT_COLLEGE_SLUG`.
 
 | Column | Type | Notes |
 |--------|------|-------|
 | id | uuid PK | |
 | name | text | "IIIT Raichur" |
 | slug | text unique | `iiit-raichur` |
-| email_domains | text[] | `{iiitr.ac.in}`; lowercase, exact match |
 | created_at | timestamptz | |
 
 Seeded by the initial migration with IIIT Raichur.

@@ -9,7 +9,7 @@ Update this file whenever work is finished or discovered. (Last updated: end of 
 - [ ] **P0** Test sign-in with a real `@iiitr.ac.in` student account. Check whether Google returns an `hd` claim → decide `GOOGLE_REQUIRE_HD` (ADR-006). If student mail is not Google-backed, tell me; we'll pick another login method.
 - [ ] **P0** Create hosting accounts and deploy staging (see `docs/DEPLOYMENT.md`): Postgres (Neon/Supabase), API (Render/Railway/Fly), web (Vercel). Set env vars from `.env.example`.
 - [ ] **P1** Create a Sentry project; set `SENTRY_DSN`.
-- [ ] **P1** Confirm whether subdomains like `students.iiitr.ac.in` exist; add to `colleges.email_domains` if so.
+- [ ] **P1** Student-council accounts use `@students.iiitr.ac.in` and are **not** allowed in the pilot. If they should be, set `ALLOWED_EMAIL_DOMAINS=iiitr.ac.in,students.iiitr.ac.in` (config only, no code change).
 
 ## Milestone 2 — Profiles & skills (next)
 
@@ -34,6 +34,7 @@ Update this file whenever work is finished or discovered. (Last updated: end of 
 
 ## Known limitations of Milestone 1
 
-- Docker Compose files and CI workflow were written but **not executed in the build sandbox** (no Docker / GitHub runner). They need a first run on your machine / GitHub.
+- **Docker images were never built or run by Docker.** The build sandbox cannot pull images (registry blocked). `docker compose config` validates, and each Dockerfile step was replayed outside Docker (frozen dependency install, migration on an empty DB, standalone web build, smoke test against that stack), but the first real `docker compose up --build` is unproven. One real bug (config path crash inside `/app`) was found this way, so expect the possibility of others.
+- **CI has never run.** The repo has not been pushed to GitHub; `.github/workflows/ci.yml` parses but is unexecuted. Every command in it was run locally and passes.
 - No real Google round-trip was possible in the sandbox; the OAuth callback logic is tested with the token exchange mocked.
 - Faculty/staff with `@iiitr.ac.in` can also sign in (ADR-006).

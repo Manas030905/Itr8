@@ -79,10 +79,12 @@ blocks cross-site request forgery without tokens, because there is exactly one l
 
 ### Access control
 
-Domain allowlist is **data**, not code: `colleges.email_domains`. Login succeeds only if
-(a) Google says `email_verified`, and (b) the email's domain (exact match) is in a college's list —
-or the exact email is in `ALLOWED_TEST_EMAILS`. Optional stricter check: Google `hd` claim
-(`GOOGLE_REQUIRE_HD`).
+The domain allowlist is **configuration**, not code: `ALLOWED_EMAIL_DOMAINS` (comma-separated,
+exact match, no wildcards; empty = nobody can sign in). Login succeeds only if (a) Google says
+`email_verified`, and (b) the email's domain is in that list — or the exact email is in
+`ALLOWED_TEST_EMAILS`. Optional stricter check: Google `hd` claim (`GOOGLE_REQUIRE_HD`). New users
+join the college named by `DEFAULT_COLLEGE_SLUG` (ADR-015). The ID token's signature, issuer,
+audience, expiry and nonce are all validated (ADR-016).
 
 ### Extensibility for matching / AI (later)
 
@@ -119,7 +121,7 @@ Vercel/Cloudflare (web) ──/api proxy──► Render/Railway/Fly (api, Docke
 Environments: local (Docker Compose or manual), staging (auto-deploy from `main`), production
 (manual/tag). See `docs/DEPLOYMENT.md`. Migrations run on API deploy (`alembic upgrade head`).
 
-## Security checklist (current status)
+## Security checklist (✅ = covered by automated tests, not just implemented)
 
 | Area | Status |
 |------|--------|
@@ -127,7 +129,7 @@ Environments: local (Docker Compose or manual), staging (auto-deploy from `main`
 | Hashed session tokens, HttpOnly/Secure/SameSite cookie | ✅ |
 | Server-side revocation on logout | ✅ |
 | Origin-based CSRF check | ✅ |
-| OAuth `state` + `nonce` + PKCE (S256) | ✅ (via Authlib) |
+| OAuth `state` + `nonce` + PKCE (S256); issuer + audience pinned | ✅ (via Authlib; forged tokens tested) |
 | Open-redirect protection on `next` | ✅ |
 | Input validation (Pydantic), ORM-only queries | ✅ |
 | Secrets only in env; startup validation in non-local envs | ✅ |
