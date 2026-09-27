@@ -5,10 +5,10 @@ const MESSAGES: Record<string, string> = {
   email_not_verified: "Google says that email address isn't verified. Verify it, then try again.",
   cancelled: "Sign-in was cancelled. You can try again whenever you're ready.",
   oauth_failed: "Google sign-in didn't complete. Please try again.",
-  not_configured: "Sign-in isn't set up on this server yet. Ask the Builder Hub team.",
-  account_disabled: "This account has been disabled. Contact the Builder Hub team.",
+  not_configured: "Sign-in isn't set up on this server yet. Ask the Itr8 team.",
+  account_disabled: "This account has been disabled. Contact the Itr8 team.",
   account_conflict:
-    "This email is already linked to a different Google account. Contact the Builder Hub team.",
+    "This email is already linked to a different Google account. Contact the Itr8 team.",
 };
 
 export function loginErrorMessage(code: string | undefined): string | null {

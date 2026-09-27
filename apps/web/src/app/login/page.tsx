@@ -28,7 +28,7 @@ export default async function LoginPage({
       <section className="flex flex-1 flex-col justify-center pb-20">
         <h1 className="text-4xl font-extrabold">Sign in</h1>
         <p className="mt-3 text-slate">
-          Builder Hub is in a pilot for IIIT Raichur students. Sign in with your college Google account.
+          Itr8 is in a pilot for IIIT Raichur students. Sign in with your college Google account.
         </p>
 
         {message && (

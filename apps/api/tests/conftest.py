@@ -11,7 +11,7 @@ from typing import Any
 from unittest.mock import AsyncMock
 
 # --- Environment must be fixed BEFORE the app (and its settings) are imported. -------------
-_DEFAULT_TEST_DB = "postgresql+psycopg://builderhub:builderhub_dev@localhost:5432/builderhub_test"
+_DEFAULT_TEST_DB = "postgresql+psycopg://itr8:itr8_dev@localhost:5432/itr8_test"
 _test_db = os.environ.get("TEST_DATABASE_URL") or _DEFAULT_TEST_DB
 if not _test_db.rsplit("/", 1)[-1].split("?")[0].endswith("_test"):
     raise RuntimeError(f"Refusing to run tests: TEST_DATABASE_URL must end in '_test' ({_test_db})")

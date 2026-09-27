@@ -1,6 +1,6 @@
-# CLAUDE.md — Builder Hub
+# CLAUDE.md — Itr8
 
-You are working as technical co-founder / senior product engineer on **Builder Hub**: a platform
+You are working as technical co-founder / senior product engineer on **Itr8**: a platform
 for Indian engineering students to discover projects, find collaborators, form teams and showcase
 work. Pilot: **IIIT Raichur only**. Read `docs/PROJECT_CONTEXT.md` first.
 

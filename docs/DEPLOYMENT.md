@@ -40,7 +40,7 @@ Do **not** set `DEV_LOGIN_ENABLED` (startup fails if it is true outside local).
 ## 3. Web (Vercel)
 - Root directory: `apps/web`. Framework: Next.js.
 - Env vars (needed at **build** and runtime — rewrites are baked in at build):
-  `API_INTERNAL_URL` = the API's public URL, e.g. `https://builderhub-api-staging.onrender.com`.
+  `API_INTERNAL_URL` = the API's public URL, e.g. `https://itr8-api-staging.onrender.com`.
 - Redeploy the web app whenever the API URL changes.
 - Cloudflare Pages needs extra care for Next.js rewrites; prefer Vercel for now (ADR-004).
 

@@ -34,15 +34,15 @@ class Settings(BaseSettings):
     environment: Literal["local", "staging", "production"] = "local"
     log_level: str = "INFO"
 
-    database_url: str = "postgresql+psycopg://builderhub:builderhub_dev@localhost:5432/builderhub"
+    database_url: str = "postgresql+psycopg://itr8:itr8_dev@localhost:5432/itr8"
     test_database_url: str | None = None
 
     frontend_url: str = "http://localhost:3000"
 
     secret_key: str = DEFAULT_SECRET_KEY
-    session_cookie_name: str = "bh_session"
+    session_cookie_name: str = "itr8_session"
     session_ttl_days: int = 14
-    oauth_cookie_name: str = "bh_oauth"
+    oauth_cookie_name: str = "itr8_oauth"
 
     google_client_id: str = ""
     google_client_secret: str = ""

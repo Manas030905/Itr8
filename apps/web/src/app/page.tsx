@@ -23,7 +23,7 @@ export default async function LandingPage() {
             Find the people to build it with.
           </h1>
           <p className="mt-6 max-w-[34rem] text-lg leading-relaxed text-slate">
-            Builder Hub is where engineering students post what they&apos;re building, say what help
+            Itr8 is where engineering students post what they&apos;re building, say what help
             they need, and find teammates who have it. We&apos;re starting with IIIT Raichur.
           </p>
           <div className="mt-9 flex flex-wrap items-center gap-4">

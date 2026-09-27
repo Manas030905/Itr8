@@ -49,7 +49,7 @@ Format: **Status** · **Context** · **Decision** · **Consequences**.
 ## ADR-008 — Authlib for the OAuth flow (explicit Google endpoints)
 **Status:** Accepted
 **Decision:** Authlib's Starlette client handles state, nonce, PKCE (S256) and ID-token validation. Google endpoints are configured explicitly (no discovery fetch at startup).
-**Consequences:** Less hand-rolled security code; no startup network dependency. OAuth state is kept in a short-lived signed cookie (`bh_oauth`), separate from the app session.
+**Consequences:** Less hand-rolled security code; no startup network dependency. OAuth state is kept in a short-lived signed cookie (`itr8_oauth`), separate from the app session.
 
 ## ADR-009 — Usernames deferred to Milestone 2
 **Status:** Accepted
@@ -100,3 +100,9 @@ Format: **Status** · **Context** · **Decision** · **Consequences**.
 **Status:** Accepted (unproven under real Docker; see TODO)
 **Decision:** API image has `dev` (adds pytest/ruff/mypy; used by Compose) and `prod` (default, no dev tools) targets. A fresh clone runs with **no `.env`**: Compose supplies local-safe defaults (`ALLOWED_EMAIL_DOMAINS=iiitr.ac.in`, `DEV_LOGIN_ENABLED=true`, Google unset, so sign-in fails safe with a clear message). Next.js `standalone` output is opt-in via `NEXT_OUTPUT=standalone` (set only in the Docker build) so `npm start` keeps working. `API_INTERNAL_URL` is a build-time arg because Next bakes rewrite destinations in at build. The test database is created by `scripts/init-db.sql` on first volume init.
 **Consequences:** `DEV_LOGIN_ENABLED` defaulting to true is acceptable only because Compose forces `ENVIRONMENT=local`, and the API independently ignores it elsewhere. A bug found while replaying the image: `config.py` indexed `Path.parents[4]`, which does not exist at `/app/app/core/config.py` and would have crashed the container at import; it now falls back safely.
+
+## ADR-018 — Product renamed from "Builder Hub" to "Itr8"
+**Status:** Accepted (founder decision)
+**Context:** Founder decided on the name Itr8 partway through Milestone 1, after initial branding work as "Builder Hub".
+**Decision:** Renamed everywhere: UI copy (logo, page titles, meta description, landing/login copy), docs, `README.md`, `CLAUDE.md`, package names (`itr8-api`, `itr8-web`), the Postgres role/database names (`itr8`, `itr8_test`), the Docker Compose project name, and the session/OAuth cookie names (`itr8_session`, `itr8_oauth`). Left untouched: feature/persona words that aren't the brand ("Builder Profile", "student builders", "Team Finder"), and past git commit messages (history, not current state).
+**Consequences:** Full test suite (130 backend, 19 frontend), lint, mypy, typecheck, production build, live smoke test, and a real-browser check were all re-run after the rename and pass. Anyone with an existing local `.env` or database from before this change needs to update `ALLOWED_TEST_EMAILS`-style values are unaffected, but `DATABASE_URL`/`TEST_DATABASE_URL` and the Postgres role must be updated to `itr8`/`itr8_dev` (or their own custom values) — see updated `.env.example`.

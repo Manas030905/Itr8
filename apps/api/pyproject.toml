@@ -1,7 +1,7 @@
 [project]
-name = "builder-hub-api"
+name = "itr8-api"
 version = "0.1.0"
-description = "Builder Hub API (FastAPI modular monolith)"
+description = "Itr8 API (FastAPI modular monolith)"
 requires-python = ">=3.12"
 dependencies = [
     "fastapi>=0.115",

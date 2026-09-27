@@ -1,16 +1,16 @@
-# Builder Hub — Project Context
+# Itr8 — Project Context
 
 > Condensed from the founder's Master Context. This is the "why". For the "what" see
 > `PRODUCT_REQUIREMENTS.md`; for the "how" see `ARCHITECTURE.md`.
 > If the code and this document disagree about *implementation status*, the code wins.
 
-## What Builder Hub is
+## What Itr8 is
 
 A platform for **Indian engineering students and student builders** to discover projects,
 showcase what they are building, find collaborators, form teams, and eventually access
 opportunities (hackathons, internships, startups).
 
-One-liner: *Builder Hub is a platform for engineering students to discover projects, find
+One-liner: *Itr8 is a platform for engineering students to discover projects, find
 teammates, collaborate, showcase their work, and connect with opportunities.*
 
 It borrows ideas from GitHub, Reddit, X, Discord, LinkedIn and hackathon platforms, but it is
@@ -36,8 +36,8 @@ Primary: engineering students (IIT / NIT / IIIT / other B.Tech / B.E.).
 - **Cold start is the main risk.** A collaboration network with 10 users is useless. Launch in one
   college, get a dense active community, validate, then expand.
 - **College as distribution channel.** Professors/clubs/hackathon teams can bring cohorts in
-  (e.g. a professor collecting project submissions through Builder Hub — always transparently
-  branded as Builder Hub).
+  (e.g. a professor collecting project submissions through Itr8 — always transparently
+  branded as Itr8).
 - **Validate before monetizing.** Monetization ideas (premium profiles, hiring, sponsored projects,
   hackathon sponsorship, college partnerships) are long-term and must not drive the MVP.
 

@@ -9,7 +9,7 @@ export function Logo() {
         <span className="rounded-[3px] bg-ink" />
         <span className="rounded-[3px] bg-ink" />
       </span>
-      <span className="font-display text-lg font-bold tracking-tight">Builder Hub</span>
+      <span className="font-display text-lg font-bold tracking-tight">Itr8</span>
     </Link>
   );
 }

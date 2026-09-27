@@ -28,7 +28,7 @@ def create_app() -> FastAPI:
         )
 
     app = FastAPI(
-        title="Builder Hub API",
+        title="Itr8 API",
         version="0.1.0",
         docs_url=None if settings.environment == "production" else "/api/docs",
         redoc_url=None,
@@ -39,7 +39,7 @@ def create_app() -> FastAPI:
     # Middleware added last runs first (outermost). Order here is: session -> CSRF -> routes.
     app.middleware("http")(origin_check)
     # Short-lived signed cookie used ONLY for the OAuth handshake (state/nonce/PKCE/next).
-    # The real login session is a separate opaque, server-side session (bh_session).
+    # The real login session is a separate opaque, server-side session (itr8_session).
     app.add_middleware(
         SessionMiddleware,
         secret_key=settings.secret_key,

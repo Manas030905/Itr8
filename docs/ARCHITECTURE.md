@@ -67,7 +67,7 @@ Starlette client is async); its DB work is pushed to the threadpool.
 
 - Login creates a random 256-bit token (`secrets.token_urlsafe(32)`).
 - Only the **SHA-256 hash** is stored in `sessions.token_hash`; the raw token lives only in the cookie.
-- Cookie `bh_session`: `HttpOnly`, `Secure` (except `ENVIRONMENT=local`), `SameSite=Lax`, `Path=/`.
+- Cookie `itr8_session`: `HttpOnly`, `Secure` (except `ENVIRONMENT=local`), `SameSite=Lax`, `Path=/`.
 - Absolute lifetime `SESSION_TTL_DAYS` (default 14). Logout deletes the row → immediate revocation.
 - `last_seen_at` is refreshed at most every 5 minutes to avoid a write per request.
 

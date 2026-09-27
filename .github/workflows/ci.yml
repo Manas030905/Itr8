@@ -17,16 +17,16 @@ jobs:
       postgres:
         image: postgres:16
         env:
-          POSTGRES_USER: builderhub
-          POSTGRES_PASSWORD: builderhub_dev
-          POSTGRES_DB: builderhub_test
+          POSTGRES_USER: itr8
+          POSTGRES_PASSWORD: itr8_dev
+          POSTGRES_DB: itr8_test
         ports: ["5432:5432"]
         options: >-
-          --health-cmd "pg_isready -U builderhub -d builderhub_test"
+          --health-cmd "pg_isready -U itr8 -d itr8_test"
           --health-interval 5s --health-timeout 5s --health-retries 10
     env:
-      DATABASE_URL: postgresql+psycopg://builderhub:builderhub_dev@localhost:5432/builderhub_test
-      TEST_DATABASE_URL: postgresql+psycopg://builderhub:builderhub_dev@localhost:5432/builderhub_test
+      DATABASE_URL: postgresql+psycopg://itr8:itr8_dev@localhost:5432/itr8_test
+      TEST_DATABASE_URL: postgresql+psycopg://itr8:itr8_dev@localhost:5432/itr8_test
     defaults:
       run:
         working-directory: apps/api

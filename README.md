@@ -1,4 +1,4 @@
-# Builder Hub
+# Itr8
 
 A platform for Indian engineering students to discover projects, find collaborators, form teams
 and showcase what they build. **Pilot: IIIT Raichur.**
@@ -51,8 +51,8 @@ Prerequisites: Python 3.12+, [uv](https://docs.astral.sh/uv/), Node 22, PostgreS
 ```bash
 cp .env.example .env            # edit if needed; defaults work with the DB below
 # create the databases once (user/password match .env.example):
-#   CREATE USER builderhub WITH PASSWORD 'builderhub_dev' CREATEDB;
-#   CREATE DATABASE builderhub OWNER builderhub;  CREATE DATABASE builderhub_test OWNER builderhub;
+#   CREATE USER itr8 WITH PASSWORD 'itr8_dev' CREATEDB;
+#   CREATE DATABASE itr8 OWNER itr8;  CREATE DATABASE itr8_test OWNER itr8;
 
 cd apps/api && uv sync && uv run alembic upgrade head
 DEV_LOGIN_ENABLED=true uv run uvicorn app.main:app --reload      # http://localhost:8000
@@ -95,7 +95,7 @@ if the security-critical ones are missing or unsafe.
 | `DATABASE_URL` / `TEST_DATABASE_URL` | Postgres URLs (`postgres://` accepted). Test DB name must end `_test` |
 | `FRONTEND_URL` | Public web origin (OAuth redirect, CSRF Origin check). https outside local |
 | `SECRET_KEY` | Signs the OAuth handshake cookie. ≥ 32 random chars outside local |
-| `SESSION_COOKIE_NAME`, `SESSION_TTL_DAYS` | Session cookie name (`bh_session`) and lifetime (14 days) |
+| `SESSION_COOKIE_NAME`, `SESSION_TTL_DAYS` | Session cookie name (`itr8_session`) and lifetime (14 days) |
 | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | Google OAuth credentials. Required outside local |
 | `GOOGLE_REQUIRE_HD` | Also require Google's `hd` (hosted-domain) claim. Default `false` — see ADR-006 |
 | `ALLOWED_EMAIL_DOMAINS` | Comma-separated domains allowed to sign in, e.g. `iiitr.ac.in`. Exact match. **Empty = nobody** |

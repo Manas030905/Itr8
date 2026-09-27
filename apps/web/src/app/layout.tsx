@@ -4,7 +4,7 @@ import "@fontsource-variable/instrument-sans";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: { default: "Builder Hub", template: "%s · Builder Hub" },
+  title: { default: "Itr8", template: "%s · Itr8" },
   description:
     "Find teammates, showcase what you build, and collaborate with other engineering students. Now piloting at IIIT Raichur.",
 };
