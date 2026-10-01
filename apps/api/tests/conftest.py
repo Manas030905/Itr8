@@ -66,7 +66,7 @@ def _database() -> None:
 def _clean_tables() -> None:
     """Empty per-test data. `colleges` keeps its migration seed."""
     with engine.begin() as conn:
-        conn.execute(text("TRUNCATE sessions, oauth_accounts, profiles, users CASCADE"))
+        conn.execute(text("TRUNCATE user_skills, sessions, oauth_accounts, profiles, users CASCADE"))
 
 
 @pytest.fixture
